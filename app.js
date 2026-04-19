@@ -87,12 +87,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         tableBody.innerHTML = '';
 
         // Render table
-        inventoryData.forEach((item) => {
+        inventoryData.forEach((item, index) => {
             const tr = document.createElement('tr');
             tr.id = `row-${item.id}`;
             if (item.revisado) tr.classList.add('completed');
 
             tr.innerHTML = `
+                <td data-label="#" style="text-align: center; font-weight: bold;">${index + 1}</td>
                 <td data-label="Foto">
                     <div style="font-size: 9px; font-weight: bold; margin-bottom: 2px; color: var(--accent);">FOTO</div><button class="toggle-btn" id="toggle-${item.id}">
                         <i class="ph ph-caret-right"></i>
@@ -139,7 +140,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             photoTr.id = `photo-row-${item.id}`;
             photoTr.className = 'photo-row hidden';
             photoTr.innerHTML = `
-                <td colspan="14">
+                <td colspan="15">
                     <div class="photo-container">
                         <div class="upload-container">
                             <label for="file-${item.id}" class="upload-btn" id="label-${item.id}">
@@ -594,8 +595,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     });
                 };
 
-                const querySnapshot = await getDocs(collection(db, "inventory"));
                 const data = [];
+                let i = 1;
                 for (const docSnap of querySnapshot.docs) {
                     const item = docSnap.data();
                     let base64Img = '';
@@ -604,6 +605,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                     data.push([
                         base64Img,
+                        i++,
                         item.codigo || '',
                         item.sicafi || '',
                         item.pf || '',
@@ -620,7 +622,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 
                 doc.autoTable({
                     startY: 20,
-                    head: [['Foto', 'Código', 'SICAFI', 'PF', 'Descripción', 'Ubicación', 'Marca', 'Modelo', 'Serie', 'Estado', 'Revisado', 'Comentarios']],
+                    head: [['Foto', '#', 'Código', 'SICAFI', 'PF', 'Descripción', 'Ubicación', 'Marca', 'Modelo', 'Serie', 'Estado', 'Revisado', 'Comentarios']],
                     body: data,
                     theme: 'grid',
                     styles: { 
@@ -639,17 +641,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                     },
                     columnStyles: {
                         0: { cellWidth: 35 }, // Foto
-                        1: { cellWidth: 20, halign: 'center' }, // Código
-                        2: { cellWidth: 18 }, // SICAFI
-                        3: { cellWidth: 15 }, // PF
-                        4: { cellWidth: 'auto' }, // Descripción (flexible)
-                        5: { cellWidth: 25 }, // Ubicación
-                        6: { cellWidth: 18 }, // Marca
-                        7: { cellWidth: 18 }, // Modelo
-                        8: { cellWidth: 22 }, // Serie
-                        9: { cellWidth: 15, halign: 'center' }, // Estado
-                        10: { cellWidth: 15, halign: 'center' }, // Revisado
-                        11: { cellWidth: 25 } // Comentarios
+                        1: { cellWidth: 10, halign: 'center' }, // #
+                        2: { cellWidth: 20, halign: 'center' }, // Código
+                        3: { cellWidth: 18 }, // SICAFI
+                        4: { cellWidth: 15 }, // PF
+                        5: { cellWidth: 'auto' }, // Descripción (flexible)
+                        6: { cellWidth: 25 }, // Ubicación
+                        7: { cellWidth: 18 }, // Marca
+                        8: { cellWidth: 18 }, // Modelo
+                        9: { cellWidth: 22 }, // Serie
+                        10: { cellWidth: 15, halign: 'center' }, // Estado
+                        11: { cellWidth: 15, halign: 'center' }, // Revisado
+                        12: { cellWidth: 25 } // Comentarios
                     },
                     didDrawCell: function(data) {
                         if (data.column.index === 0 && data.cell.section === 'body') {
@@ -692,10 +695,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             try {
                 const querySnapshot = await getDocs(collection(db, "inventory"));
-                const data = [];
-                querySnapshot.forEach((docSnap) => {
+                let i = 1;
+                const data = querySnapshot.docs.map(docSnap => {
                     const item = docSnap.data();
-                    data.push({
+                    return {
+                        '#': i++,
                         'Código': item.codigo || '',
                         'SICAFI': item.sicafi || '',
                         'PF': item.pf || '',
