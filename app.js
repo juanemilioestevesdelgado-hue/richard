@@ -15,13 +15,13 @@ import {
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBpGkDT1Fz-XqY_H7clwtHYiwyeCsWvrQk",
-  authDomain: "inventario-5ta-brigada.firebaseapp.com",
-  projectId: "inventario-5ta-brigada",
-  storageBucket: "inventario-5ta-brigada.firebasestorage.app",
-  messagingSenderId: "903523003246",
-  appId: "1:903523003246:web:bd4cbd336d7f01ac46ef7f",
-  measurementId: "G-LFWZTZFGRR"
+  apiKey: "AIzaSyBDSvuzugExjjWS6wHhdoEXGeeNPz5FulY",
+  authDomain: "inventario-u51.firebaseapp.com",
+  projectId: "inventario-u51",
+  storageBucket: "inventario-u51.firebasestorage.app",
+  messagingSenderId: "520794533760",
+  appId: "1:520794533760:web:10fd8b7cd0bea3d3401b65",
+  measurementId: "G-EQFSQH4GEL"
 };
 
 const app = initializeApp(firebaseConfig);
