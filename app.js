@@ -143,6 +143,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <option value="no-existe" ${item.estado === 'no-existe' ? 'selected' : ''}>No existe</option>
                     </select>
                 </td>
+                <td data-label="Última Rev.">${item.ultimaRevision || '-'}</td>
+                <td data-label="Próxima Rev.">${item.proximaRevision || '-'}</td>
                 <td data-label="Revisión" class="action-column">
                     <div class="checkbox-wrapper">
                         <input type="checkbox" class="custom-checkbox" id="check-${item.id}" ${item.revisado ? 'checked' : ''}>
@@ -191,10 +193,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             const checkbox = tr.querySelector(`#check-${item.id}`);
             checkbox.addEventListener('change', async (e) => {
                 const isChecked = e.target.checked;
-                if (isChecked) { tr.classList.add('completed'); reviewedCount++; }
-                else { tr.classList.remove('completed'); reviewedCount--; }
+                const updateData = { revisado: isChecked };
+                
+                if (isChecked) { 
+                    tr.classList.add('completed'); 
+                    reviewedCount++; 
+                    // Set current date as Last Review if not already set or whenever checked
+                    const today = new Date().toISOString().split('T')[0];
+                    updateData.ultimaRevision = today;
+                } else { 
+                    tr.classList.remove('completed'); 
+                    reviewedCount--; 
+                }
+                
                 reviewedItemsEl.textContent = reviewedCount;
-                await updateDoc(doc(db, "inventory", item.id), { revisado: isChecked });
+                await updateDoc(doc(db, "inventory", item.id), updateData);
             });
 
             // Comment
@@ -258,6 +271,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     document.getElementById('edit-modelo').value = item.modelo || '';
                     document.getElementById('edit-serie').value = item.serie || '';
                     document.getElementById('edit-estado').value = item.estado || '';
+                    document.getElementById('edit-ultima-revision').value = item.ultimaRevision || '';
+                    document.getElementById('edit-proxima-revision').value = item.proximaRevision || '';
                     document.getElementById('edit-revisado').checked = item.revisado || false;
                     document.getElementById('edit-comentarios').value = item.comentarios || '';
                     document.getElementById('edit-item-modal').classList.remove('hidden');
@@ -453,6 +468,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 modelo: document.getElementById('edit-modelo').value.trim(),
                 serie: document.getElementById('edit-serie').value.trim(),
                 estado: document.getElementById('edit-estado').value,
+                ultimaRevision: document.getElementById('edit-ultima-revision').value,
+                proximaRevision: document.getElementById('edit-proxima-revision').value,
                 revisado: document.getElementById('edit-revisado').checked,
                 comentarios: document.getElementById('edit-comentarios').value.trim()
             };

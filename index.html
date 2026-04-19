@@ -101,6 +101,8 @@
                             <th>Modelo</th>
                             <th>Serie</th>
                             <th>Estado</th>
+                            <th>Última Rev.</th>
+                            <th>Próxima Rev.</th>
                             <th class="action-column">Revisión</th>
                             <th class="action-column">Comentarios</th>
                             <th class="action-column" style="width: 60px;">Acciones</th>
@@ -190,7 +192,18 @@
                     </select>
                 </div>
 
-                <div style="display: flex; gap: 10px; align-items: center;">
+                <div style="display: flex; gap: 10px; margin-top: 5px;">
+                    <div style="flex: 1;">
+                        <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 4px;">Última Revisión:</label>
+                        <input type="date" id="edit-ultima-revision" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="font-size: 0.85rem; font-weight: 600; display: block; margin-bottom: 4px;">Próxima Revisión:</label>
+                        <input type="date" id="edit-proxima-revision" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; align-items: center; margin-top: 5px;">
                     <input type="checkbox" id="edit-revisado" style="width: 20px; height: 20px;">
                     <label for="edit-revisado" style="font-size: 0.9rem; font-weight: 600;">¿Revisado /
                         Completado?</label>
