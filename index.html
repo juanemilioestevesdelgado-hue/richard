@@ -34,16 +34,18 @@
     <div class="app-container">
         <header class="header">
             <div class="header-content" style="display: flex; align-items: center; gap: 1.5rem;">
-                <img src="logo.png" alt="Logo Bomberos" style="width: 70px; height: auto; border-radius: 8px;">
+                <img src="logo.png" alt="logo.png" style="width: 70px; height: auto; border-radius: 8px;">
                 <div>
                     <h1>INVENTARIO U30</h1>
                     <p>Gestión y revisión de equipos</p>
                 </div>
             </div>
-            
+
             <div class="search-container" style="flex: 1; max-width: 350px; margin: 0 1rem; position: relative;">
-                <i class="ph ph-magnifying-glass" style="position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
-                <input type="text" id="search-input" placeholder="Buscar por nombre..." style="width: 100%; padding: 0.6rem 1rem 0.6rem 2.2rem; border-radius: 10px; border: 1px solid var(--glass-border); background: var(--bg-primary); font-family: inherit; font-size: 0.9rem;">
+                <i class="ph ph-magnifying-glass"
+                    style="position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
+                <input type="text" id="search-input" placeholder="Buscar por nombre..."
+                    style="width: 100%; padding: 0.6rem 1rem 0.6rem 2.2rem; border-radius: 10px; border: 1px solid var(--glass-border); background: var(--bg-primary); font-family: inherit; font-size: 0.9rem;">
             </div>
             <div class="stats">
                 <div class="stat-card">
@@ -123,18 +125,29 @@
     <!-- Add Item Modal -->
     <div id="add-item-modal" class="modal hidden">
         <div class="modal-content" style="max-width: 500px; padding: 20px;">
-            <span class="close-add-modal" style="float: right; cursor: pointer; font-size: 20px;"><i class="ph ph-x"></i></span>
+            <span class="close-add-modal" style="float: right; cursor: pointer; font-size: 20px;"><i
+                    class="ph ph-x"></i></span>
             <h2 style="margin-bottom: 15px;">Añadir Nuevo Item</h2>
             <form id="add-item-form" style="display: flex; flex-direction: column; gap: 10px;">
-                <input type="text" id="add-codigo" placeholder="Código (Ej: U-30-001)" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
-                <input type="text" id="add-sicafi" placeholder="SICAFI" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
-                <input type="text" id="add-pf" placeholder="PF" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
-                <input type="text" id="add-descripcion" placeholder="Descripción del Bien" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
-                <input type="text" id="add-ubicacion" placeholder="Ubicación" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
-                <input type="text" id="add-marca" placeholder="Marca" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
-                <input type="text" id="add-modelo" placeholder="Modelo" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
-                <input type="text" id="add-serie" placeholder="Serie" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
-                <button type="submit" class="upload-btn" style="background: #10b981; color: white; margin-top: 10px; justify-content: center;">Guardar Item</button>
+                <input type="text" id="add-codigo" placeholder="Código (Ej: U-30-001)" required
+                    style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="add-sicafi" placeholder="SICAFI"
+                    style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="add-pf" placeholder="PF"
+                    style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="add-descripcion" placeholder="Descripción del Bien" required
+                    style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="add-ubicacion" placeholder="Ubicación"
+                    style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="add-marca" placeholder="Marca"
+                    style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="add-modelo" placeholder="Modelo"
+                    style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="add-serie" placeholder="Serie"
+                    style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <button type="submit" class="upload-btn"
+                    style="background: #10b981; color: white; margin-top: 10px; justify-content: center;">Guardar
+                    Item</button>
             </form>
         </div>
     </div>
@@ -142,22 +155,33 @@
     <!-- Edit Item Modal -->
     <div id="edit-item-modal" class="modal hidden">
         <div class="modal-content" style="max-width: 500px; padding: 20px;">
-            <span class="close-edit-modal" style="float: right; cursor: pointer; font-size: 20px;"><i class="ph ph-x"></i></span>
+            <span class="close-edit-modal" style="float: right; cursor: pointer; font-size: 20px;"><i
+                    class="ph ph-x"></i></span>
             <h2 style="margin-bottom: 15px;">Editar Item</h2>
             <form id="edit-item-form" style="display: flex; flex-direction: column; gap: 10px;">
                 <input type="hidden" id="edit-original-codigo">
-                <input type="text" id="edit-codigo" placeholder="Código (Ej: U-30-001)" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; background-color: #f3f4f6;" disabled title="El código no se puede editar">
-                <input type="text" id="edit-sicafi" placeholder="SICAFI" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
-                <input type="text" id="edit-pf" placeholder="PF" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
-                <input type="text" id="edit-descripcion" placeholder="Descripción del Bien" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
-                <input type="text" id="edit-ubicacion" placeholder="Ubicación" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
-                <input type="text" id="edit-marca" placeholder="Marca" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
-                <input type="text" id="edit-modelo" placeholder="Modelo" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
-                <input type="text" id="edit-serie" placeholder="Serie" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
-                
+                <input type="text" id="edit-codigo" placeholder="Código (Ej: U-30-001)" required
+                    style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; background-color: #f3f4f6;"
+                    disabled title="El código no se puede editar">
+                <input type="text" id="edit-sicafi" placeholder="SICAFI"
+                    style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="edit-pf" placeholder="PF"
+                    style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="edit-descripcion" placeholder="Descripción del Bien" required
+                    style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="edit-ubicacion" placeholder="Ubicación"
+                    style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="edit-marca" placeholder="Marca"
+                    style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="edit-modelo" placeholder="Modelo"
+                    style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="edit-serie" placeholder="Serie"
+                    style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+
                 <div style="display: flex; gap: 10px; align-items: center; margin-top: 5px;">
                     <label style="font-size: 0.9rem; font-weight: 600;">Estado:</label>
-                    <select id="edit-estado" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                    <select id="edit-estado"
+                        style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
                         <option value="">Seleccionar...</option>
                         <option value="bueno">Bueno</option>
                         <option value="malo">Malo</option>
@@ -168,12 +192,16 @@
 
                 <div style="display: flex; gap: 10px; align-items: center;">
                     <input type="checkbox" id="edit-revisado" style="width: 20px; height: 20px;">
-                    <label for="edit-revisado" style="font-size: 0.9rem; font-weight: 600;">¿Revisado / Completado?</label>
+                    <label for="edit-revisado" style="font-size: 0.9rem; font-weight: 600;">¿Revisado /
+                        Completado?</label>
                 </div>
 
-                <textarea id="edit-comentarios" placeholder="Comentarios..." rows="2" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; resize: vertical;"></textarea>
+                <textarea id="edit-comentarios" placeholder="Comentarios..." rows="2"
+                    style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; resize: vertical;"></textarea>
 
-                <button type="submit" class="upload-btn" style="background: #3b82f6; color: white; margin-top: 10px; justify-content: center;">Actualizar Item</button>
+                <button type="submit" class="upload-btn"
+                    style="background: #3b82f6; color: white; margin-top: 10px; justify-content: center;">Actualizar
+                    Item</button>
             </form>
         </div>
     </div>
