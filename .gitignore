@@ -1,0 +1,8 @@
+# Archivos temporales de desarrollo
+check.mjs
+patch*
+test-cors.js
+.tempmediaStorage/
+node_modules/
+.DS_Store
+Thumbs.db

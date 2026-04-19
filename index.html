@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario - 5ta Brigada</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts for modern typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons (Modern & sleek icons) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- SheetJS for Excel -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <!-- jsPDF and AutoTable for PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+    <!-- Import map for Firebase -->
+    <script type="importmap">
+      {
+        "imports": {
+          "firebase/app": "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js",
+          "firebase/analytics": "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js",
+          "firebase/firestore": "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js"
+        }
+      }
+    </script>
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="ph ph-package"></i> INVENTARIO U30</h1>
+                <p>Gestión y revisión de equipos</p>
+            </div>
+            <div class="stats">
+                <div class="stat-card">
+                    <span class="stat-value" id="total-items">0</span>
+                    <span class="stat-label">Total Items</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value" id="reviewed-items">0</span>
+                    <span class="stat-label">Revisados</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; gap: 10px; align-items: center; justify-content: flex-end;">
+                        <button id="clear-db-btn" class="upload-btn"
+                            style="height: fit-content; background: #ef4444; color: white; border: 2px solid darkred;">
+                            <i class="ph ph-trash"></i> Borrar Todo
+                        </button>
+                        <button id="export-pdf-btn" class="upload-btn"
+                            style="height: fit-content; background: #eab308; color: white; border: 2px solid #ca8a04;">
+                            <i class="ph ph-file-pdf"></i> PDF
+                        </button>
+                        <button id="export-excel-btn" class="upload-btn"
+                            style="height: fit-content; background: #22c55e; color: white; border: 2px solid #16a34a;">
+                            <i class="ph ph-file-xls"></i> Excel
+                        </button>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center; justify-content: flex-end;">
+                        <button id="add-item-btn" class="upload-btn"
+                            style="height: fit-content; background: #10b981; color: white; border: 2px solid #059669;">
+                            <i class="ph ph-plus"></i> Añadir Item
+                        </button>
+                        <button id="sync-btn" class="upload-btn"
+                            style="height: fit-content; background: var(--accent); color: white;">
+                            <i class="ph ph-arrows-clockwise"></i> Sincronizar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="table-container">
+                <table id="inventory-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px; font-size: 10px; color: var(--accent);">FOTO</th>
+                            <th>Código</th>
+                            <th>SICAFI</th>
+                            <th>PF</th>
+                            <th>Descripción Bien</th>
+                            <th>Ubicación</th>
+                            <th>Marca</th>
+                            <th>Modelo</th>
+                            <th>Serie</th>
+                            <th>Estado</th>
+                            <th class="action-column">Revisión</th>
+                            <th class="action-column">Comentarios</th>
+                            <th class="action-column" style="width: 60px;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-body">
+                        <!-- Rows will be populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="image-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal"><i class="ph ph-x"></i></span>
+            <img id="modal-image" src="" alt="Vista previa de foto">
+        </div>
+    </div>
+
+    <!-- Add Item Modal -->
+    <div id="add-item-modal" class="modal hidden">
+        <div class="modal-content" style="max-width: 500px; padding: 20px;">
+            <span class="close-add-modal" style="float: right; cursor: pointer; font-size: 20px;"><i class="ph ph-x"></i></span>
+            <h2 style="margin-bottom: 15px;">Añadir Nuevo Item</h2>
+            <form id="add-item-form" style="display: flex; flex-direction: column; gap: 10px;">
+                <input type="text" id="add-codigo" placeholder="Código (Ej: U-30-001)" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="add-sicafi" placeholder="SICAFI" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="add-pf" placeholder="PF" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="add-descripcion" placeholder="Descripción del Bien" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="add-ubicacion" placeholder="Ubicación" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="add-marca" placeholder="Marca" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="add-modelo" placeholder="Modelo" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="add-serie" placeholder="Serie" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <button type="submit" class="upload-btn" style="background: #10b981; color: white; margin-top: 10px; justify-content: center;">Guardar Item</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Item Modal -->
+    <div id="edit-item-modal" class="modal hidden">
+        <div class="modal-content" style="max-width: 500px; padding: 20px;">
+            <span class="close-edit-modal" style="float: right; cursor: pointer; font-size: 20px;"><i class="ph ph-x"></i></span>
+            <h2 style="margin-bottom: 15px;">Editar Item</h2>
+            <form id="edit-item-form" style="display: flex; flex-direction: column; gap: 10px;">
+                <input type="hidden" id="edit-original-codigo">
+                <input type="text" id="edit-codigo" placeholder="Código (Ej: U-30-001)" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; background-color: #f3f4f6;" disabled title="El código no se puede editar">
+                <input type="text" id="edit-sicafi" placeholder="SICAFI" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="edit-pf" placeholder="PF" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="edit-descripcion" placeholder="Descripción del Bien" required style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="edit-ubicacion" placeholder="Ubicación" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="edit-marca" placeholder="Marca" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="edit-modelo" placeholder="Modelo" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <input type="text" id="edit-serie" placeholder="Serie" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                <button type="submit" class="upload-btn" style="background: #3b82f6; color: white; margin-top: 10px; justify-content: center;">Actualizar Item</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="/app.js"></script>
+</body>
+
+</html>
