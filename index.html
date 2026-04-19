@@ -144,6 +144,25 @@
                 <input type="text" id="edit-marca" placeholder="Marca" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
                 <input type="text" id="edit-modelo" placeholder="Modelo" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
                 <input type="text" id="edit-serie" placeholder="Serie" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                
+                <div style="display: flex; gap: 10px; align-items: center; margin-top: 5px;">
+                    <label style="font-size: 0.9rem; font-weight: 600;">Estado:</label>
+                    <select id="edit-estado" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                        <option value="">Seleccionar...</option>
+                        <option value="bueno">Bueno</option>
+                        <option value="malo">Malo</option>
+                        <option value="regular">Regular</option>
+                        <option value="no-existe">No existe</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="checkbox" id="edit-revisado" style="width: 20px; height: 20px;">
+                    <label for="edit-revisado" style="font-size: 0.9rem; font-weight: 600;">¿Revisado / Completado?</label>
+                </div>
+
+                <textarea id="edit-comentarios" placeholder="Comentarios..." rows="2" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; resize: vertical;"></textarea>
+
                 <button type="submit" class="upload-btn" style="background: #3b82f6; color: white; margin-top: 10px; justify-content: center;">Actualizar Item</button>
             </form>
         </div>

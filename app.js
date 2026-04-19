@@ -93,21 +93,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (item.revisado) tr.classList.add('completed');
 
             tr.innerHTML = `
-                <td>
+                <td data-label="Foto">
                     <div style="font-size: 9px; font-weight: bold; margin-bottom: 2px; color: var(--accent);">FOTO</div><button class="toggle-btn" id="toggle-${item.id}">
                         <i class="ph ph-caret-right"></i>
                     </button>
                 </td>
-                <td><strong>${item.codigo}</strong></td>
-                <td>${item.sicafi || ''}</td>
-                <td>${item.pf || ''}</td>
-                <td>${item.descripcion || ''}</td>
-                <td>${item.ubicacion || ''}</td>
-                <td>${item.marca || ''}</td>
-                <td>${item.modelo || ''}</td>
-                <td>${item.serie || ''}</td>
+                <td data-label="Código"><strong>${item.codigo}</strong></td>
+                <td data-label="SICAFI">${item.sicafi || ''}</td>
+                <td data-label="PF">${item.pf || ''}</td>
+                <td data-label="Descripción">${item.descripcion || ''}</td>
+                <td data-label="Ubicación">${item.ubicacion || ''}</td>
+                <td data-label="Marca">${item.marca || ''}</td>
+                <td data-label="Modelo">${item.modelo || ''}</td>
+                <td data-label="Serie">${item.serie || ''}</td>
                 
-                <td>
+                <td data-label="Estado">
                     <select class="status-select default" id="status-${item.id}">
                         <option value="" disabled ${!item.estado ? 'selected' : ''}>Seleccionar...</option>
                         <option value="bueno" ${item.estado === 'bueno' ? 'selected' : ''}>Bueno</option>
@@ -117,18 +117,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </select>
                 </td>
                 
-                <td class="action-column">
+                <td data-label="Revisión" class="action-column">
                     <div class="checkbox-wrapper">
                         <input type="checkbox" class="custom-checkbox" id="check-${item.id}" ${item.revisado ? 'checked' : ''}>
                     </div>
                 </td>
                 
-                <td class="action-column">
+                <td data-label="Comentarios" class="action-column">
                     <textarea class="comment-input" id="comment-${item.id}" rows="1" placeholder="Agregar comentario...">${item.comentarios || ''}</textarea>
                 </td>
-                <td class="action-column" style="display:flex; gap:5px; align-items:center; justify-content:center; height:100%; border-left: none; padding-top:15px;">
-                    <button class="icon-btn edit-item-btn" id="edit-${item.id}" title="Editar Item" style="color: #3b82f6; background: none; border: none; cursor: pointer; font-size: 18px;"><i class="ph ph-pencil-simple"></i></button>
-                    <button class="icon-btn delete-item-btn" id="delete-item-${item.id}" title="Borrar Item" style="color: #ef4444; background: none; border: none; cursor: pointer; font-size: 18px;"><i class="ph ph-trash"></i></button>
+                <td data-label="Acciones" class="action-column" style="display:flex; gap:15px; align-items:center; justify-content:center; border-left: none; padding-top:10px;">
+                    <button class="icon-btn edit-item-btn" id="edit-${item.id}" title="Editar Item" style="color: #3b82f6; background: none; border: none; cursor: pointer; font-size: 22px;"><i class="ph ph-pencil-simple"></i></button>
+                    <button class="icon-btn delete-item-btn" id="delete-item-${item.id}" title="Borrar Item" style="color: #ef4444; background: none; border: none; cursor: pointer; font-size: 22px;"><i class="ph ph-trash"></i></button>
                 </td>
             `;
 
@@ -255,6 +255,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     document.getElementById('edit-marca').value = item.marca || '';
                     document.getElementById('edit-modelo').value = item.modelo || '';
                     document.getElementById('edit-serie').value = item.serie || '';
+                    document.getElementById('edit-estado').value = item.estado || '';
+                    document.getElementById('edit-revisado').checked = item.revisado || false;
+                    document.getElementById('edit-comentarios').value = item.comentarios || '';
                     document.getElementById('edit-item-modal').classList.remove('hidden');
                 });
             }
@@ -361,14 +364,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             const batch = writeBatch(db);
             fullInventory.forEach((item) => {
                 const docRef = doc(db, "inventory", item.codigo);
-                // Use set with merge:true to avoid overwriting existing review data
+                // SAFE SYNC: Only update equipment info, do NOT overwrite review fields if they exist
                 batch.set(docRef, {
-                    ...item,
-                    // These fields will only be set if they don't exist
-                    estado: item.estado || "",
-                    revisado: item.revisado || false,
-                    comentarios: item.comentarios || "",
-                    fotoUrl: item.fotoUrl || ""
+                    codigo: item.codigo,
+                    sicafi: item.sicafi,
+                    pf: item.pf,
+                    descripcion: item.descripcion,
+                    ubicacion: item.ubicacion,
+                    marca: item.marca,
+                    modelo: item.modelo,
+                    serie: item.serie
+                    // Note: We don't include revisado, estado, comentarios here 
+                    // so merge:true will preserve them if they already exist in Firestore
                 }, { merge: true });
             });
             await batch.commit();
@@ -508,7 +515,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ubicacion: document.getElementById('edit-ubicacion').value.trim(),
                 marca: document.getElementById('edit-marca').value.trim(),
                 modelo: document.getElementById('edit-modelo').value.trim(),
-                serie: document.getElementById('edit-serie').value.trim()
+                serie: document.getElementById('edit-serie').value.trim(),
+                estado: document.getElementById('edit-estado').value,
+                revisado: document.getElementById('edit-revisado').checked,
+                comentarios: document.getElementById('edit-comentarios').value.trim()
             };
 
             try {
